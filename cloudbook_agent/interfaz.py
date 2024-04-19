@@ -385,11 +385,12 @@ def manage1(project):
 				dpg.add_text(str(Grant[agente.Grant_level.value]),parent=str(project.name)+str(agente_id))
 				
 			dpg.add_table_cell(parent=str(project.name)+str(agente_id),tag='botones'+str(project.name)+str(agente_id))
-			dpg.add_button(label='lanzar',user_data=[project.name,agente.id],parent='botones'+str(project.name)+str(agente_id),callback=lanzar)
-			dpg.add_same_line(parent='botones'+str(project.name)+str(agente_id))
-			dpg.add_button(label='parar',user_data=[project.name,agente.id],parent='botones'+str(project.name)+str(agente_id),callback=parar)
-			dpg.add_same_line(parent='botones'+str(project.name)+str(agente_id))
-			dpg.add_button(label='eliminar',user_data=[project.name,agente.id],parent='botones'+str(project.name)+str(agente_id),callback=eliminar)
+			with dpg.group(horizontal=True, parent='botones'+str(project.name)+str(agente_id)):
+				dpg.add_button(label='lanzar',user_data=[project.name,agente.id],callback=lanzar)
+
+				dpg.add_button(label='parar',user_data=[project.name,agente.id],callback=parar)
+
+				dpg.add_button(label='eliminar',user_data=[project.name,agente.id],callback=eliminar)
 	else:
 		dpg.show_item('ventana_agentes')
 
