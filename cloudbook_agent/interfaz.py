@@ -279,8 +279,8 @@ dpg.add_group(horizontal=False,parent='ventana_principal',tag='combos')
 dpg.add_group(horizontal=True,parent='ventana_principal',tag='botones')
 dpg.add_text('Elige un Proyecto', parent="combos")
 dpg.add_combo( items=projects_list, parent="combos",tag='proyecto',callback=on_dropdown_selection)
-dpg.add_button(label='Desplegar', parent="botones",tag='Deploy',callback=proceso_Deploy)
-dpg.add_button(label='Ejecutar proyecto', parent="botones",tag='run_proyecto',callback=proceso_run)
+#dpg.add_button(label='Desplegar', parent="botones",tag='Deploy',callback=proceso_Deploy)
+#dpg.add_button(label='Ejecutar proyecto', parent="botones",tag='run_proyecto',callback=proceso_run)
 #dpg.add_child_window(  parent='grupo')
 
 ######################################crear manage
