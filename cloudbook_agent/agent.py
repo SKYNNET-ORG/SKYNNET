@@ -1440,7 +1440,7 @@ def is_critical(du):
 
 def añadirJson(agent_id,pid,ruta):
 	try:
-		with open(ruta+"pidagentes.json", "r") as f:
+		with open(ruta+socket.gethostname()+"pidagentes.json", "r") as f:
 			data = json.load(f)
 	except:
 		data={}
@@ -1448,7 +1448,7 @@ def añadirJson(agent_id,pid,ruta):
 		nuevo_agente ={"agent":agent_id,
 				   "pid":pid}
 		data [agent_id] = nuevo_agente
-		with open(ruta+"pidagentes.json", "w") as f:
+		with open(ruta+socket.gethostname()+"pidagentes.json", "w") as f:
 			json.dump(data, f, indent=4)
 
 

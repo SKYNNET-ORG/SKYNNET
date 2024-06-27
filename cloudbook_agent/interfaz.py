@@ -161,7 +161,12 @@ with open("gui.txt", "r") as archivo:
 		time.sleep(1)
 		if respuesta.status_code == 200:
 			url=str(linea)+'/projects'
-			respuesta = requests.get(url)
+			while recibido<5:
+				try:
+					respuesta = requests.get(url)
+					recibido=6
+				except:
+					recibido=0
 			if respuesta.status_code == 200:
 				x=respuesta.text.split('"')
 				for i in range(1,len(x)-1,2):
@@ -451,6 +456,7 @@ RAM_data = []
 for i in range(1,50):
     cpu_data.append(0)
     internet_data.append(0)
+    RAM_data.appen(0)
     time_data.append(i)
     Gpu_data.append(0)
 
@@ -659,7 +665,7 @@ def run(sender, app_data):
 						dpg.set_axis_limits(dpg.last_item(), 0, 50)
 						dpg.add_plot_axis(dpg.mvYAxis, label="RAM(%)", tag="y_axis3")
 						dpg.set_axis_limits(dpg.last_item(), 0, 100)
-						dpg.add_line_series(label="RAM",parent="y_axis2",tag='RAM' , x=time_data , y= cpu_data)
+						dpg.add_line_series(label="RAM",parent="y_axis3",tag='RAM' , x=time_data , y= cpu_data)
 
 # In	iciar el hilo para la actualización en segundo plano
 			stop_event = threading.Event()

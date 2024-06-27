@@ -194,7 +194,7 @@ def buscar(project_name,agent_id=None):
 		if agent_id==None:
 			
 			for clave ,valor in projects[project_name]['agent_pid_dict_flask'].items():
-				x=x+valor.cpu_percent()/psutil.cpu_count()
+				x=x+valor.cpu_percent()/psutil.cpu_count(memtype='rss')
 				ram=ram+valor.memory_percent()
 		else:
 				x= projects[project_name]['agent_pid_dict_flask'][agent_id]
@@ -364,6 +364,28 @@ def launch(project_name, agent_id):
 								proc = psutil.Process(proc_pid)
 						except:
 							print("The pid of the agent_0 terminal could not be retrieved. Retrying...")
+					# If the lxterminal is installed (Raspbian)
+				elif tool_exists("lxterminal"):
+					print("Using new lxterminal as terminal emulator for agent_0.")
+					full_command = "lxterminal --title=\"CLOUDBOOK_agent_0_("+project_name+")\" -e '" + full_command + "'"
+					subprocess.Popen(full_command, shell=True, preexec_fn=os.setsid)
+
+					proc = None
+					while not proc:
+						time.sleep(0.3)
+						try:
+							proc_pid = get_pid_agent_0_unix(project_name)
+							if proc_pid:
+								proc = psutil.Process(proc_pid)
+						except:
+							print("The pid of the agent_0 terminal could not be retrieved. Retrying...")
+				# If no supported terminal is installed, launch in the same window as the GUI (as any other agent)
+				else:
+					print("Neither gnome-terminal nor lxterminal are installed. Launching agent_0 in same terminal as the GUI.")
+					proc = subprocess.Popen(full_command, shell=True, preexec_fn=os.setsid)
+			else:
+				proc = subprocess.Popen(full_command, shell=True, preexec_fn=os.setsid)
+				proc = psutil.Process(proc.pid)
 		projects[project_name]["agent_pid_dict"][agent_id] = proc
 		
 		app.refresh()
@@ -689,7 +711,7 @@ class GeneralInfoTab (ttk.Frame):
 
 		# Windows case
 		if platform.system()=="Windows":
-			full_command = "py -3 " + agent_command
+			full_command = "py " + agent_command
 			if agent_id=="agent_0":
 				full_command = "start \"CLOUDBOOK_agent_0_("+self.project_name+")\" " + full_command
 				subprocess.Popen(full_command, shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
