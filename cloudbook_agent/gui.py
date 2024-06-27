@@ -783,8 +783,11 @@ class GeneralInfoTab (ttk.Frame):
 		agent_id = self.agents_info[r-3]['AGENT_ID']
 		print("Stopping agent", agent_id, projects[self.project_name]["agent_pid_dict"][agent_id])
 		kill_process(projects[self.project_name]["agent_pid_dict"][agent_id])
-		del projects[self.project_name]["agent_pid_dict"][agent_id]
-		del projects[self.project_name]["agent_pid_dict_flask"][agent_id]
+		try:
+			del projects[self.project_name]["agent_pid_dict"][agent_id]
+			del projects[self.project_name]["agent_pid_dict_flask"][agent_id]
+		except:
+			pass
 		print("Active processes: ", projects[self.project_name]["agent_pid_dict"], "\n")
 		app.refresh()
 
