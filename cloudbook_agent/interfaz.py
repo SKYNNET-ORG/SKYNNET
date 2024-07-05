@@ -159,6 +159,7 @@ with open("gui.txt", "r") as archivo:
 
 
 		time.sleep(1)
+		recibido=0
 		if respuesta.status_code == 200:
 			url=str(linea)+'/projects'
 			while recibido<5:
@@ -182,8 +183,6 @@ for x in projects_list:
 	projects[x]=project(x,gui)
 
 projects_list=list(projects_list.keys())
-
-
 
 
 #gui aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -456,7 +455,7 @@ RAM_data = []
 for i in range(1,50):
     cpu_data.append(0)
     internet_data.append(0)
-    RAM_data.appen(0)
+    RAM_data.append(0)
     time_data.append(i)
     Gpu_data.append(0)
 
@@ -567,7 +566,8 @@ def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
 		if gui=='':
 			for x in projects[proyecto].gui:
 				url=str(x)+'/GPU/'+str(proyecto)+'/'
-				respuesta = requests.get(url)
+				#respuesta = requests.get(url)
+				respuesta.status_code==0
 				if respuesta.status_code == 200:
 					aux = respuesta.json()
 					GPU_percent=aux['GPU']
@@ -577,7 +577,8 @@ def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
 			if str(agent)=='todos':
 				agent=''
 			url=str(gui)+'/GPU/'+str(proyecto)+'/'+str(agent)
-			respuesta = requests.get(url)
+			#respuesta = requests.get(url)
+			respuesta.status_code==0
 			if respuesta.status_code == 200:
 				aux = respuesta.json()
 				GPU_percent=aux['GPU']
