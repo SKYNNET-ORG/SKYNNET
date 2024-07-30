@@ -148,13 +148,15 @@ class agents:
 projects_list={}
 with open("gui.txt", "r") as archivo:
 	for linea in archivo:
+		if len(linea)<4:
+			continue  
 		url=str(linea).replace("\n", "")+':4998'+'/START'
-		print(url)
+		
 		linea=linea.replace("\n", "")+':4999'
 
 
 		respuesta = requests.get(url)
-		#respuesta.status_code==200
+		#respuesta.status_code=200
 
 
 
@@ -199,14 +201,15 @@ global proyecto
 
 dpg.create_context()
 def on_dropdown_selection3(sender, app_data):
-	print(f"Seleccionaste: {app_data}")
+	#print(f"Seleccionaste: {app_data}")
+	pass
 
 
 
 def on_dropdown_selection2(sender=None, app_data=None):
 	global proyecto
 	gui=dpg.get_value('combo_guis')
-	print(gui)
+	#print(gui)
 	objetos_con_estado =[agente_id for agente_id, agente in proyecto.agents.items() if (agente.status == Opciones.lanzado and agente.ip==gui)]
 	
 	agentes = objetos_con_estado
@@ -224,7 +227,7 @@ def on_dropdown_selection2(sender=None, app_data=None):
 
 	
 def on_dropdown_selection(sender, app_data):
-	print(f"Seleccionaste: {app_data}")
+	#print(f"Seleccionaste: {app_data}")
 	global proyecto
 	proyecto=projects[app_data]
 	try:
@@ -246,7 +249,8 @@ def proceso_Deploy():
 		full_command='start \"deploy\" py C:/Users/gomezbot/Desktop/sk_cloudbook-main/cloudbook_deployer/cloudbook_deployer.py -project_folder '+str(proyecto.name)
 		subprocess.Popen(full_command, shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
 	except Exception as e:
-		print(e)
+		#print(e)
+		pass
 
 
 """
@@ -261,7 +265,8 @@ def proceso_run():
 		full_command='start \"run\" py C:/Users/gomezbot/Desktop/sk_cloudbook-main/cloudbook_deployer/cloudbook_run.py -project_folder '+str(proyecto.name)
 		subprocess.Popen(full_command, shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
 	except Exception as e:
-		print(e)
+		#print(e)
+		pass
 
 
 """def button_run():
@@ -304,9 +309,9 @@ def parar(sender, app_data):
 	
 	projects[button_data[0]].parar_agentes(button_data[1])
 
-	print(projects[button_data[0]].agents[button_data[1]].status)
+	#print(projects[button_data[0]].agents[button_data[1]].status)
 	text_id = ("status_"+str(button_data[1]))
-	print(text_id)
+	#print(text_id)
 	dpg.set_value("status_"+str(button_data[0])+str(button_data[1]),projects[button_data[0]].agents[button_data[1]].status.value )
 	if dpg.does_item_exist("combo_agents")==True:
 		on_dropdown_selection2()
@@ -359,7 +364,7 @@ def manage1(project):
 	except:
 		pass
 	ventana_existe = dpg.does_item_exist("ventana_agentes")
-	print(f"¿La ventana existe? {ventana_existe}")
+	#print(f"¿La ventana existe? {ventana_existe}")
 	if ventana_existe==False:
 		dpg.add_child_window(tag="ventana_agentes",parent='grupovertical')
 
@@ -403,7 +408,7 @@ def manage1(project):
 
 def manage(sender, app_data):
 	ventana_existe = dpg.does_item_exist("ventana_agentes")
-	print(f"¿La ventana existe? {ventana_existe}")
+	#print(f"¿La ventana existe? {ventana_existe}")
 	if ventana_existe==False:
 		dpg.add_child_window(tag="ventana_agentes",parent='grupovertical')
 		dpg.add_tab_bar(tag='menuproyectos',parent='ventana_agentes')
@@ -448,7 +453,7 @@ def manage(sender, app_data):
 
 
 cpu_data = []
-Gpu_data = []
+#Gpu_data = []
 internet_data = []
 time_data = []
 RAM_data = []
@@ -457,7 +462,7 @@ for i in range(1,50):
     internet_data.append(0)
     RAM_data.append(0)
     time_data.append(i)
-    Gpu_data.append(0)
+    #Gpu_data.append(0)
 
 # Función para obtener el porcentaje de uso de la CPU
 def get_cpu_usage():
@@ -554,13 +559,13 @@ def update_plot_thread(proyecto,agent,gui, stop_event):
 		
 		
 		time.sleep(2)
-	print('se ha parado el hilo')
+	#print('se ha parado el hilo')
 
 
 
 #(((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object { $_.InstanceName -like "*pid_14856*" })).CookedValue
 
-def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
+"""def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
 	global Gpu_data
 	while not stop_event.is_set():
 		if gui=='':
@@ -603,7 +608,7 @@ def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
 
 
 
-
+"""
 
 
 
@@ -618,13 +623,11 @@ def update_plot_thread_GPU(proyecto,agent,gui, stop_event):
 
 
 update_thread=None
-update_thread_GPU=None
+#update_thread_GPU=None
 stop_event=None
 def run(sender, app_data):
-	global update_thread,stop_event,cpu_data ,Gpu_data ,internet_data,time_data,update_thread_GPU
+	global update_thread,stop_event,cpu_data ,internet_data,time_data#,  update_thread_GPU, Gpu_data
 	proyecto=dpg.get_value("proyecto")
-	print(proyecto)
-	print('a')
 	if proyecto!='':
 		agent=dpg.get_value("combo_agents")
 		gui=dpg.get_value("combo_guis")
@@ -634,7 +637,7 @@ def run(sender, app_data):
 			pass
 		
 		ventana_existe = dpg.does_item_exist("Graficos")
-		print(f"¿La ventana existe? {ventana_existe}")
+		#print(f"¿La ventana existe? {ventana_existe}")
 		if ventana_existe==False:
 			dpg.add_group(parent='grupo',tag='grupo_Graficos')
 			dpg.add_group(horizontal=True, parent='grupo_Graficos',height=50,tag='botones_graficos')
@@ -646,13 +649,13 @@ def run(sender, app_data):
 						dpg.add_plot_axis(dpg.mvYAxis, label="CPU (%)", tag="y_axis")
 						dpg.set_axis_limits(dpg.last_item(), 0, 100)
 						dpg.add_line_series(label="CPU",parent="y_axis",tag='series_tag' , x=time_data , y= cpu_data)
-				with dpg.collapsing_header(label="GPU"):
+				"""with dpg.collapsing_header(label="GPU"):
 					with dpg.plot(label="Consumo de GPU (%)",tracked=True, height=200):
 						dpg.add_plot_axis(dpg.mvXAxis, label="Tiempo")
 						dpg.set_axis_limits(dpg.last_item(), 0, 50)
 						dpg.add_plot_axis(dpg.mvYAxis, label="GPU (%)", tag="y_axis1")
 						dpg.set_axis_limits(dpg.last_item(), 0, 100)
-						dpg.add_line_series(label="GPU",parent="y_axis1",tag='aaa' , x=time_data , y= cpu_data)
+						dpg.add_line_series(label="GPU",parent="y_axis1",tag='aaa' , x=time_data , y= cpu_data)"""
 				with dpg.collapsing_header(label="Internet"):
 					with dpg.plot(label="Consumo de Internet (%)",tracked=True, height=200):
 						dpg.add_plot_axis(dpg.mvXAxis, label="Tiempo")
@@ -673,36 +676,37 @@ def run(sender, app_data):
 			update_thread = threading.Thread(target=update_plot_thread, args=(proyecto, agent, gui, stop_event))
 			update_thread.start()
 
-			update_thread_GPU = threading.Thread(target=update_plot_thread_GPU, args=(proyecto, agent, gui, stop_event))
-			update_thread_GPU.start()
+			"""update_thread_GPU = threading.Thread(target=update_plot_thread_GPU, args=(proyecto, agent, gui, stop_event))
+			update_thread_GPU.start()"""
+
 			dpg.add_button(label='parar graficos',parent="botones_graficos",callback=stopgraficos)
 			dpg.add_button(label='nuevas Estadisticas',parent="botones_graficos",callback=run)
 
 		else:
 			stop_event.set()  # Establece la bandera para indicar que el hilo debe detenerse
 			update_thread.join()
-			update_thread_GPU.join()
+			#update_thread_GPU.join()
 			cpu_data = []
-			Gpu_data = []
+			#Gpu_data = []
 			internet_data = []
 			time_data = []
 			for i in range(1,50):
 				cpu_data.append(0)
 				internet_data.append(0)
 				time_data.append(i)
-				Gpu_data.append(0)
+				#Gpu_data.append(0)
 
 			stop_event = threading.Event()
 			update_thread = threading.Thread(target=update_plot_thread, args=(proyecto, agent, gui, stop_event))
 			update_thread.start()
-			update_thread_GPU = threading.Thread(target=update_plot_thread_GPU, args=(proyecto, agent, gui, stop_event))
-			update_thread_GPU.start()
+			#update_thread_GPU = threading.Thread(target=update_plot_thread_GPU, args=(proyecto, agent, gui, stop_event))
+			#update_thread_GPU.start()
 	else:
 		pass
 def stopgraficos():
 	stop_event.set()  # Establece la bandera para indicar que el hilo debe detenerse
 	update_thread.join()
-	update_thread_GPU.join()
+	#update_thread_GPU.join()
 	dpg.delete_item('grupo_Graficos')
 	ventana_estadisticas()
 
@@ -710,11 +714,13 @@ def on_close():
 		try:
 			stop_event.set()  # Establece la bandera para indicar que el hilo debe detenerse
 			update_thread.join()
-			update_thread_GPU.join()
+			#update_thread_GPU.join()
 		except:
 			pass
 		with open("gui.txt", "r") as archivo:
 			for linea in archivo:
+				if len(linea)<4:
+					continue  
 				url=str(linea).replace("\n", "")+':4999'+'/Parar_agentes'
 				respuesta = requests.get(url)
 				if respuesta.status_code == 200:
